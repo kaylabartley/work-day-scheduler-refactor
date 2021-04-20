@@ -19,8 +19,7 @@ var options = {  weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 var prnDt =  new Date().toLocaleTimeString('en-us', options);
 
 $("#currentDay").html(prnDt);
- var todoText = [{}, {}, {}, {}, {}, {}, {}, {}, {}];
-
+ var toDoText = ['', '', '', '','', '', '', '', ''];
 
 
 var loadItems = function() {
@@ -31,46 +30,65 @@ var loadItems = function() {
     });
 
    var hour= parseInt(hour);
-   
+
     for(var i=0; i<inputs.length; i++ ){
         var input = inputs[i];
-        console.log(hour + " "+input.id);
-        if (hour>input.id){
+        var inp = input.id.split("-")[0];
+        console.log(hour + " "+inp);
+        if (hour>inp){
             input.classList.add("past");
+            console.log("past");
         }
-        if(hour<input.id){
+        else if(hour<inp){
             input.classList.add("future");
+            console.log("future");
         }
-        if(hour==input.id){
+        else if(hour==inp){
             input.classList.add("present");
+            console.log("present");
         }
         
         
         
     }
-    todoText = JSON.parse(localStorage.getItem("text"));
-  
+    toDoText = JSON.parse(localStorage.getItem("text"));
+    console.log(toDoText);
+ // 8 arrays
     // if nothing in localStorage, create a new object to track all task status arrays
-    if (!tasks) {
-      tasks = {
-        toDo: [],
-        inProgress: [],
-        inReview: [],
-        done: []
-      };
+    if (!toDoText) {
+        for(var a=0; a<9; i++){
+            toDoText[i]='';
+
+        }
     }
-  
-    // loop over object properties
-    $.each(tasks, function(list, arr) {
-      // then loop over sub-array
-      arr.forEach(function(task) {
-        createTask(task.text, task.date, list);
-      });
-    });
+    else{
+        for(var h=0; h<9; h++){
+            var z = h+9;
+            document.getElementById(z.toString()+"-t").value=toDoText[h];
+        }
+    }
   };
 
   var saveItems = function() {
+    
     localStorage.setItem("text", JSON.stringify(tasks));
   };
 
+  $(".saveBtn").click(function(){
+        var id = this.id;
+        console.log(id);
+        var input= document.getElementById(id+"-t").value;
+        console.log(input);
+        toDoText[id-9]=input;
+        console.log(toDoText);
+        localStorage.setItem("text", JSON.stringify(toDoText));
+  })
+
+  /*var names = [];
+  names[0] = prompt("New member name?");
+  localStorage.setItem("names", JSON.stringify(names));
+  
+  //...
+  var storedNames = JSON.parse(localStorage.getItem("names"));
+  */
   loadItems();
